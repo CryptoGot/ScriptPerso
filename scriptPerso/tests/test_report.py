@@ -75,6 +75,29 @@ class TestReport(unittest.TestCase):
         except KeyError as e:
             self.fail(f"Colonne manquante dans le rapport : {e}")
 
+def test_generate_report_multiple_categories(self):
+    """
+    Teste la génération d'un rapport avec plusieurs catégories.
+    """
+    data = pd.DataFrame({
+        'product': ['A', 'B', 'C', 'D'],
+        'category': ['cat1', 'cat1', 'cat2', 'cat3'],
+        'quantity': [10, 20, 5, 15],
+        'price': [50, 100, 200, 300]
+    })
+    output_file = 'test_data/multiple_categories_report.csv'
+
+    # Génère le rapport
+    generate_report(data, output_file)
+
+    try:
+        result = pd.read_csv(output_file)
+        self.assertEqual(result[result['category'] == 'cat1']['quantity'].iloc[0], 30)
+        self.assertEqual(result[result['category'] == 'cat1']['price'].iloc[0], 75)
+        self.assertEqual(result[result['category'] == 'cat3']['quantity'].iloc[0], 15)
+    except FileNotFoundError:
+        self.fail(f"Le fichier {output_file} n'a pas été créé.")
+
 
 if __name__ == "__main__":
     unittest.main()

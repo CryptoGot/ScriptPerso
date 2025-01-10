@@ -6,15 +6,12 @@ def read_and_merge_csv(files):
     Lit et fusionne plusieurs fichiers CSV en un seul DataFrame.
 
     Préconditions :
-    - `files` est une liste de chemins valides vers des fichiers CSV.
-    - Les fichiers doivent contenir les colonnes obligatoires :
-    'product', 'category', 'quantity', 'price'.
+    - `files` est une liste de chemins vers des fichiers CSV.
+    - Chaque fichier doit contenir les colonnes : 'product', 'category', 'quantity', 'price'.
 
     Postconditions :
-    - Retourne un DataFrame contenant les données fusionnées
-    des fichiers CSV fournis.
-    - Retourne un DataFrame vide si aucun fichier
-    valide n'est fourni ou en cas d'erreur.
+    - Retourne un tableau avec toutes les données fusionnées.
+    - Si aucun fichier valide n'est fourni, retourne un tableau vide.
 
     Exceptions levées :
     - FileNotFoundError : Si un fichier n'est pas trouvé.
@@ -63,15 +60,12 @@ def search_by_category(dataframe, category):
     Recherche toutes les lignes correspondant à une catégorie spécifique.
 
     Préconditions :
-    - `dataframe` est un DataFrame
-    valide contenant les colonnes 'category'.
-    - `category` est une chaîne de caractères
-    correspondant à une catégorie existante ou non.
+    - `dataframe` doit avoir une colonne 'category'.
+    - `category` est une chaîne de texte.
 
     Postconditions :
-    - Retourne un DataFrame contenant uniquement
-    les lignes correspondant à la catégorie spécifiée.
-    - Retourne un DataFrame vide si la catégorie n'existe pas.
+    - Retourne les lignes correspondant à la catégorie.
+    - Retourne un tableau vide si la catégorie n'existe pas.
 
     Exceptions levées :
     - KeyError : Si la colonne 'category' est absente du DataFrame.
@@ -91,15 +85,12 @@ def search_by_product(dataframe, product):
     Recherche toutes les lignes correspondant à un produit spécifique.
 
     Préconditions :
-    - `dataframe` est un DataFrame valide contenant
-    les colonnes 'product'.
-    - `product` est une chaîne de caractères correspondant
-    à un produit existant ou non.
+    - `dataframe` doit avoir une colonne 'product'.
+    - `product` est une chaîne de texte.
 
     Postconditions :
-    - Retourne un DataFrame contenant uniquement les lignes
-    correspondant au produit spécifié.
-    - Retourne un DataFrame vide si le produit n'existe pas.
+    - Retourne les lignes correspondant au produit.
+    - Retourne un tableau vide si le produit n'existe pas.
 
     Exceptions levées :
     - KeyError : Si la colonne 'product' est absente du DataFrame.
