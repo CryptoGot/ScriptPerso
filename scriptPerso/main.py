@@ -1,4 +1,5 @@
 import argparse
+import pandas as pd
 from inventory_manager import (
     read_and_merge_csv,
     search_by_category,
@@ -6,8 +7,7 @@ from inventory_manager import (
 )
 from report import generate_report
 
-
-def main():
+def create_csv():
     """
     Point d'entrée principal du programme.
 
@@ -27,11 +27,48 @@ def main():
     pas les colonnes nécessaires.
     - KeyError : Si une colonne requise manque dans les données.
     """
+    filename = input("Entrez le nom du fichier CSV à créer (avec extension .csv) : ")
+    data = []
+    print("Entrez les produits (tapez 'stop' pour terminer) :")
+
+    while True:
+        product = input("Nom du produit (ou 'stop' pour terminer) : ")
+        if product.lower() == 'stop':
+            break
+        category = input("Catégorie : ")
+        quantity = input("Quantité : ")
+        price = input("Prix : ")
+        data.append({
+            'product': product,
+            'category': category,
+            'quantity': int(quantity),
+            'price': float(price)
+        })
+
+    # Crée un DataFrame et sauvegarde dans un fichier CSV
+    df = pd.DataFrame(data)
+    df.to_csv(filename, index=False)
+    print(f"Fichier CSV '{filename}' créé avec succès.")
+
+def main():
+    """
+    Point d'entrée principal du programme.
+    """
     try:
+        # Liste des fichiers CSV
+        csv_files = []
+
+        # Vérifie si l'utilisateur veut créer un nouveau fichier CSV
+        create_new = input("Voulez-vous créer un nouveau fichier CSV ? (oui/non) : ").strip().lower()
+        if create_new == 'oui':
+            create_csv()
+            new_file = input("Entrez le chemin du fichier CSV que vous venez de créer : ").strip()
+            csv_files.append(new_file)
+
         # Définir les arguments du programme
         parser = argparse.ArgumentParser(description="Gestion de l'inventaire")
         parser.add_argument(
-            "csv_files", nargs="+", help="Liste des fichiers CSV à consolider"
+            "csv_files", nargs="*", help="Liste des fichiers CSV à consolider"
         )
         parser.add_argument(
             "-o", "--output", help="Nom du fichier pour le rapport généré",
@@ -47,11 +84,13 @@ def main():
         )
         args = parser.parse_args()
 
+        # Ajouter les fichiers passés en argument
+        csv_files.extend(args.csv_files)
+
         # Lecture et fusion des fichiers CSV
-        data = read_and_merge_csv(args.csv_files)
+        data = read_and_merge_csv(csv_files)
         if data.empty:
-            print(
-                "Aucune donnée valide n'a été trouvée dans les fichiers CSV.")
+            print("Aucune donnée valide n'a été trouvée dans les fichiers CSV.")
             return
 
         # Recherche par produit
@@ -87,7 +126,6 @@ def main():
         print(f"Erreur : Données manquantes ou mal formatées. Détails : {ke}")
     except Exception as e:
         print(f"Une erreur inattendue est survenue : {e}")
-
 
 if __name__ == "__main__":
     main()
